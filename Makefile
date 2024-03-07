@@ -1,6 +1,7 @@
 NAME= ft_ping
 COMPILER= gcc 
 FILES=	main.c \
+		utils.c
 
 all: ${NAME}
 
