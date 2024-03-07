@@ -2,9 +2,11 @@ In a VM
 # inetutils-2.0
 language : C
 all the files needed + Makefile (usual rules)
-libc authorized
-excve, ping, fcntl, poll and ppoll prohibited.
-options: -v -?
+options:    -v -> verbose output
+            -? -> help panel
 only IPv4
 Manage FQDN without DNS in the packet return
+
+# libc authorized
 # all printf family allowed
+# excve, ping, fcntl, poll and ppoll prohibited.
