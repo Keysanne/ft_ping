@@ -1,9 +1,9 @@
 #include "ft_ping.h"
 
-char **update(char **argv, int *argc, bool verbose, bool help)
+char **update(char **argv, int *argc, bool verbose)
 {
     int j = 0;
-    char **final = malloc(((*argc) + 1 - (int)verbose - (int)help) * sizeof(char*));
+    char **final = malloc(((*argc) + 1 - (int)verbose) * sizeof(char*));
     
     (*argc)--;
     for(int i = 1; argv[i];i++)
@@ -18,6 +18,14 @@ char **update(char **argv, int *argc, bool verbose, bool help)
     }
     final[j] = 0;
     return final;
+}
+
+void    init_struc(struc *global, char **argv, int argc, bool verbose)
+{
+    global->arg = update(argv, &argc, verbose);
+    global->packet_recv = 0;
+    global->packet_send = 0;
+    return;
 }
 
 bool find_option(char **argv, char *opt)

@@ -5,9 +5,27 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <signal.h>
+#include <arpa/inet.h>
+#include<sys/socket.h>
+#include<netdb.h>
 
-void free_arg(char **argv, int error);
-bool find_option(char **argv, char *opt);
-char **update(char **argv, int *argc, bool verbose, bool help);
+typedef struct  t_struc
+{
+    char    **arg;
+    int     packet_send;
+    int     packet_recv;
+    bool    verbose;
+}       struc;
+
+int     hxtoi(char* str);
+void    help_option(void);
+void    is_an_ip(char **arg, char *str);
+void    free_arg(char **argv, int error);
+void    verbose_option(char *ip, bool verbose);
+void    init_struc(struc *global, char **argv, int argc, bool verbose);
+bool    find_option(char **argv, char *opt);
+char**  update(char **argv, int *argc, bool verbose);
+char*   hostname_to_ip(char * hostname , char* ip);
 
 #endif
