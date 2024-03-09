@@ -1,17 +1,17 @@
 #include "ft_ping.h"
 
-void    is_an_ip(char **arg, char *ip)
+void    is_an_ip(char **arg, char **ip)
 {
     struct sockaddr_in sa;
 
-    if (inet_pton(AF_INET, ip, &(sa.sin_addr)) == 1)
+    if (inet_pton(AF_INET, *ip, &(sa.sin_addr)) == 1)
         return;
     else
     {
-        if (strncmp(ip, "0x", 2) == 0)
-            sprintf(ip, "%d", hxtoi(ip));
-        hostname_to_ip(ip, ip);
-        if (inet_pton(AF_INET, ip, &(sa.sin_addr)) == 1)
+        if (strncmp(*ip, "0x", 2) == 0)
+            sprintf(*ip, "%ld", hxtoi(*ip));
+        *ip = hostname_to_ip(*ip);
+        if (inet_pton(AF_INET, *ip, &(sa.sin_addr)) == 1)
             return;
         printf("./ft_ping: Unknown host\n");
         free_arg(arg, 1);
@@ -26,25 +26,27 @@ int find(char* str, char find)
 	return -1;
 }
 
-int hxtoi(char* str)
+long hxtoi(char* str)
 {
-	int		rst = 0; 
-	char	base[] = "0123456789abcdef";
+	long		x = 0, y = 0, rst = 0; 
+	char	*base[] = {"0123456789abcdef", "0123456789ABCDEF"};
 
-	for(int i = 2;str[i]; i++)
+	for(int i = 2; str[i]; i++)
 	{
 		rst *= 16;
-		rst += find(base, str[i]);
+		if ((x = find(base[0], str[i])) == -1 && (y = find(base[1], str[i])) == -1)
+			return -1;
+		rst += x > y ? x : y;
 	}
 	return rst;
 }
 
-char* hostname_to_ip(char * hostname , char* ip)
+char* hostname_to_ip(char * hostname)
 {
-	struct hostent	*he;
-		
-	if ((he = gethostbyname(hostname)) == NULL)
-		return NULL;
-	strcpy(ip , inet_ntoa(**(struct in_addr **)he->h_addr_list));
-    return ip;
+	struct hostent	*host = gethostbyname(hostname);
+
+	free(hostname);
+	if (host == NULL)
+		return strdup("");
+    return strdup(inet_ntoa(**(struct in_addr **)host->h_addr_list));
 }

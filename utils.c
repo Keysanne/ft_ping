@@ -1,5 +1,6 @@
 #include "ft_ping.h"
 
+
 char **update(char **argv, int *argc, bool verbose)
 {
     int j = 0;
@@ -14,7 +15,16 @@ char **update(char **argv, int *argc, bool verbose)
             continue;
         }
         else
-            final[j++] = strdup(argv[i]);
+        {
+            if(argv[i][0] == '-')
+            {
+                final[j] = 0;
+                printf("./ft_ping invalid option - '%s'\nTry './ft_ping -?' for more informations.\n", &argv[i][1]);
+                free_arg(final, 1);
+            }
+            else
+                final[j++] = strdup(argv[i]);
+        }
     }
     final[j] = 0;
     return final;

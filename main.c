@@ -11,7 +11,7 @@ void	endProg(int signal)
         printf("round-trip min/avg/max/stddev = %f/%f/%f/%f ms\n", 0.1, 0.1, 0.1, 0.1);
         for(int i = 1; global.arg[i]; i++)
         {
-            is_an_ip(global.arg, global.arg[i]);
+            is_an_ip(global.arg, &global.arg[i]);
             verbose_option(global.arg[i], global.verbose);
             printf("--- %s ping statistics ---\n", global.arg[i]);
             printf("1 packets transmitted, 0 packets received, 100%% packet loss\n");
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     global.verbose = find_option(argv,"-v");
     init_struc(&global, argv, argc, global.verbose);
     signal(SIGINT, &endProg);
-    is_an_ip(global.arg, *global.arg);
+    is_an_ip(global.arg, global.arg);
     verbose_option(*global.arg, global.verbose);
     while(true)
         ;

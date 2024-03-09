@@ -8,7 +8,7 @@ FILES=	main.c \
 all: ${NAME}
 
 ${NAME}:
-		${COMPILER} ${FILES} -o ${NAME}
+		${COMPILER} ${FILES} -o ${NAME} -g
 
 clean:
 		rm -f ${NAME}
