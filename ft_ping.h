@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <sys/time.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <netinet/in.h> 
