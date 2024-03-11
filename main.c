@@ -21,27 +21,16 @@ void	endProg(int signal)
 	}
 }
 
-int	timer(long time_sec, long time_usec)
-{
-	struct timeval	test;
-	int				sec;
-	int				milli;
-
-	gettimeofday(&test, NULL);
-	sec = (test.tv_sec - time_sec) * 1000;
-	milli = (test.tv_usec - time_usec) / 1000;
-	return (sec + milli);
-}
 
 void    loop(struc *global)
 {
-	struct timeval	test;
-	gettimeofday(&test, NULL);
-    struct sockaddr_in *dst
-     = calloc(sizeof(struct sockaddr_in), 0);
-    dst->sin_family = AF_INET;
-    dst->sin_port = htons(1025);
-    if(sendto(global->sockfd, global->buffer, sizeof(global->buffer), 0, (struct sockaddr*)&dst, sizeof(*dst)) < 0)
+    // create_icmp(global, global->packet_send + 1);
+    /*--------------------------------------------------------------------------*/
+    struct sockaddr_in dst;
+    memset((char *)&dst, 0, sizeof(dst));
+    dst.sin_family = AF_INET;
+    dst.sin_port = htons(1025);
+    if(sendto(global->sockfd, global->buffer, sizeof(global->buffer), 0, (struct sockaddr*)&dst, sizeof(dst)) < 0)
         free_arg(global, 1);
     (global->packet_send)++;
 
@@ -59,7 +48,6 @@ void    loop(struc *global)
     (global->packet_recv)++;
     
     
-    printf("%d\n", timer(test.tv_sec, test.tv_usec));
     sleep(1);
 }
 
