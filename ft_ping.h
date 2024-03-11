@@ -27,6 +27,7 @@ typedef struct  t_struc
     char    buffer[64];
     int     packet_send;
     int     packet_recv;
+    struct icmphdr *icmp;
 }       struc;
 
 void    help_option(void);

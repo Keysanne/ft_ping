@@ -25,38 +25,29 @@ void	endProg(int signal)
 void    loop(struc *global)
 {
     // create_icmp(global, global->packet_send + 1);
-    clock_t start = clock();
     /*--------------------------------------------------------------------------*/
     struct sockaddr_in dst;
     memset((char *)&dst, 0, sizeof(dst));
     dst.sin_family = AF_INET;
     dst.sin_port = htons(1025);
-    // struct icmphdr *icp = (struct icmphdr *)global->buffer;
-    // icp->type = ICMP_ECHO;
-    // icp->code = 0;
-    // icp->checksum = 0;
-    // icp->un.echo.sequence = htons(1);
-
-    int sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-    if (sockfd == -1)
-        perror("Error creating socket");
-    ssize_t x = sendto(sockfd, global->buffer, sizeof(global->buffer), 0, (struct sockaddr*)&dst, sizeof(dst));
-    perror("Error: ");
-    printf("%zd bytes sent\n", x);
+    if(sendto(global->sockfd, global->buffer, sizeof(global->buffer), 0, (struct sockaddr*)&dst, sizeof(dst)) < 0)
+        free_arg(global, 1);
     (global->packet_send)++;
-    /*--------------------------------------------------------------------------*/
-    // struct sockaddr_in from;
-    // unsigned int addrlen = sizeof(from);
-    // to.sin_family = AF_INET;
-    // to.sin_addr.s_addr = inet_addr(*global->arg);
-    // x = recvfrom(sockfd, global->buffer, sizeof(global->buffer), 0, (struct sockaddr*)&from, &addrlen); 
-    // printf("%zd\n", x);
-    /*--------------------------------------------------------------------------*/
+
+
+    struct  msghdr  msg;
+    char            addrbuf[128];
+    struct iovec    iov;
+    bzero(&msg, sizeof(msg));
+    msg.msg_name = addrbuf;
+    msg.msg_namelen = sizeof(addrbuf);
+    msg.msg_iov = &iov;
+    msg.msg_iovlen = 1;
+    if(recvmsg(global->sockfd, &msg, MSG_WAITALL) < 0)
+        free_arg(global, 1);
     (global->packet_recv)++;
-    clock_t end = clock();
-    float time = (end - start);
-    time /= 1000;
-    printf("%.3f\n", time);
+    
+    
     sleep(1);
 }
 

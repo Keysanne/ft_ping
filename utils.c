@@ -48,6 +48,14 @@ void    init_struc(struc *global, char **argv, int argc, bool verbose)
     global->arg = update(argv, &argc, verbose);
     global->packet_recv = 0;
     global->packet_send = 0;
+    global->icmp = (struct icmphdr *)global->buffer;
+    global->icmp->type = ICMP_ECHO;
+    global->icmp->code = 0;
+    global->icmp->checksum = 0;
+    global->icmp->un.echo.sequence = htons(1);
+    global->sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+    if (global->sockfd == -1)
+        perror("Error creating socket");
     return;
 }
 
