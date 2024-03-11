@@ -21,33 +21,34 @@ void	endProg(int signal)
 	}
 }
 
-
 void    loop(struc *global)
 {
-    // create_icmp(global, global->packet_send + 1);
-    /*--------------------------------------------------------------------------*/
-    struct sockaddr_in dst;
-    memset((char *)&dst, 0, sizeof(dst));
-    dst.sin_family = AF_INET;
-    dst.sin_port = htons(1025);
-    if(sendto(global->sockfd, global->buffer, sizeof(global->buffer), 0, (struct sockaddr*)&dst, sizeof(dst)) < 0)
+    int     x;
+    clock_t start = clock();
+
+    if((x = sendto(global->sockfd, global->buffer, sizeof(global->buffer), 0, (struct sockaddr*)&global->dst, sizeof(global->dst))) < 0)
         free_arg(global, 1);
     (global->packet_send)++;
+    printf("%d bytes sent\n", x);
 
 
-    struct  msghdr  msg;
-    char            addrbuf[128];
-    struct iovec    iov;
-    bzero(&msg, sizeof(msg));
-    msg.msg_name = addrbuf;
-    msg.msg_namelen = sizeof(addrbuf);
-    msg.msg_iov = &iov;
-    msg.msg_iovlen = 1;
-    if(recvmsg(global->sockfd, &msg, MSG_WAITALL) < 0)
-        free_arg(global, 1);
-    (global->packet_recv)++;
+    // struct  msghdr  msg;
+    // char            addrbuf[128];
+    // struct iovec    iov;
+    // bzero(&msg, sizeof(msg));
+    // msg.msg_name = addrbuf;
+    // msg.msg_namelen = sizeof(addrbuf);
+    // msg.msg_iov = &iov;
+    // msg.msg_iovlen = 1;
+    // if(recvmsg(global->sockfd, &msg, MSG_WAITALL) < 0)
+    //     free_arg(global, 1);
+    // (global->packet_recv)++;
     
-    
+
+    clock_t end = clock();
+    float time = (end - start);
+    time /= 1000;
+    printf("%.3f\n", time);
     sleep(1);
 }
 

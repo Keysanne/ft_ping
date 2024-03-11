@@ -28,6 +28,7 @@ typedef struct  t_struc
     int     packet_send;
     int     packet_recv;
     struct icmphdr *icmp;
+    struct sockaddr_in dst;
 }       struc;
 
 void    help_option(void);

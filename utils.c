@@ -45,14 +45,21 @@ void    create_icmp(struc *global, int seq)
 
 void    init_struc(struc *global, char **argv, int argc, bool verbose)
 {
+    /*-------------------VAR-------------------*/
     global->arg = update(argv, &argc, verbose);
     global->packet_recv = 0;
     global->packet_send = 0;
+    /*-------------------SENDTO-VAR-------------------*/
+    bzero(&global->dst, sizeof(global->dst));
+    global->dst.sin_family = AF_INET;
+    global->dst.sin_port = htons(1025);
+    /*-------------------ICMP_PROTOCOL-------------------*/
     global->icmp = (struct icmphdr *)global->buffer;
     global->icmp->type = ICMP_ECHO;
     global->icmp->code = 0;
     global->icmp->checksum = 0;
     global->icmp->un.echo.sequence = htons(1);
+    /*-------------------SET-UP-RAW-SOCKET-------------------*/
     global->sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (global->sockfd == -1)
         perror("Error creating socket");
