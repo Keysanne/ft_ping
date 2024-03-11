@@ -1,4 +1,5 @@
 #include "ft_ping.h"
+#include <arpa/inet.h>
 
 
 char **update(char **argv, int *argc, bool verbose)
@@ -52,7 +53,8 @@ void    init_struc(struc *global, char **argv, int argc, bool verbose)
     /*-------------------SENDTO-VAR-------------------*/
     bzero(&global->dst, sizeof(global->dst));
     global->dst.sin_family = AF_INET;
-    global->dst.sin_port = htons(1025);
+    global->dst.sin_addr.s_addr = inet_addr(*global->arg);
+    global->dst.sin_port = htons(3000);
     /*-------------------ICMP_PROTOCOL-------------------*/
     global->icmp = (struct icmphdr *)global->buffer;
     global->icmp->type = ICMP_ECHO;
