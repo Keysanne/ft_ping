@@ -1,6 +1,6 @@
 #include "ft_ping.h"
 
-void    is_an_ip(char **arg, char **ip)
+void    is_an_ip(struc *global, char **ip)
 {
     struct sockaddr_in sa;
 
@@ -14,7 +14,7 @@ void    is_an_ip(char **arg, char **ip)
         if (inet_pton(AF_INET, *ip, &(sa.sin_addr)) == 1)
             return;
         printf("./ft_ping: Unknown host\n");
-        free_arg(arg, 1);
+        free_arg(global, 1);
     }
 }
 

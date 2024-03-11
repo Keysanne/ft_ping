@@ -20,7 +20,10 @@ char **update(char **argv, int *argc, bool verbose)
             {
                 final[j] = 0;
                 printf("./ft_ping invalid option - '%s'\nTry './ft_ping -?' for more informations.\n", &argv[i][1]);
-                free_arg(final, 1);
+                for (int x = 0; final[x]; x++)
+                    free(final[x]);
+                free(final);
+                exit(1);
             }
             else
                 final[j++] = strdup(argv[i]);
@@ -28,6 +31,16 @@ char **update(char **argv, int *argc, bool verbose)
     }
     final[j] = 0;
     return final;
+}
+
+void    create_icmp(struc *global, int seq)
+{
+    struct icmphdr *icmp = (struct icmphdr *)global->buffer;
+    icmp->type = ICMP_ECHO;
+    icmp->code = 0;
+    icmp->checksum = 0; 
+    icmp->un.echo.id = getpid();
+    icmp->un.echo.sequence = seq;
 }
 
 void    init_struc(struc *global, char **argv, int argc, bool verbose)
@@ -46,10 +59,11 @@ bool find_option(char **argv, char *opt)
     return false;
 }
 
-void free_arg(char **argv, int error)
+void free_arg(struc *global, int error)
 {
-    for(int i = 0; argv[i]; i++)
-        free(argv[i]);
-    free(argv);
+    for(int i = 0; global->arg[i]; i++)
+        free(global->arg[i]);
+    free(global->arg);
+    close(global->sockfd);
     exit(error);
 }
