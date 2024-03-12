@@ -7,8 +7,9 @@ void	endProg(int signal)
 	if (signal == SIGINT)
 	{
         printf("--- %s ping statistics ---\n", *global.arg);
-        printf("%d packets transmitted, %d packets received, %.0f%% packet loss\n", global.packet_send, global.packet_recv, (float)abs(global.packet_recv / global.packet_send * 100 - 100)); // mettre les %
-        printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n", global.time_min, moy(global.time), global.time_max, deviation(global.time));
+        printf("%d packets transmitted, %d packets received, %.0f%% packet loss\n", global.packet_send, global.packet_recv, (float)abs(global.packet_recv / global.packet_send * 100 - 100));
+        float m = moy(global.time), d = deviation(global.time);
+        printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n", global.time_min, m, global.time_max, d);
         for(int i = 1; global.arg[i]; i++)
         {
             free(global.ip);

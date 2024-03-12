@@ -4,18 +4,22 @@ float   moy(float *tab)
 {
     float   final = 0;
     int     x;
+
     for(x; tab[x] != -1; x++)
         final += tab[x];
-    return(final / x);
+    final /= x;
+    return final;
 }
 
 float   deviation(float *tab)
 {
     float   final = 0, m = moy(tab);
     int     x;
+
     for(x = 0; tab[x] != -1; x++)
         final += powf(tab[x] - m, 2);
-    return sqrtf(final / 10);
+    final = sqrtf(final / x);
+    return final;
 }
 
 float*  add_time(float *tab, float time)
@@ -36,6 +40,7 @@ float*  add_time(float *tab, float time)
             new_tab[x] = tab[x];
         new_tab[x++] = time;
         new_tab[x] = -1;
+        free(tab);
     }
     return new_tab;
 }

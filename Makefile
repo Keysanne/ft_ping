@@ -9,7 +9,7 @@ FILES=	main.c  \
 all: ${NAME}
 
 ${NAME}:
-		${COMPILER} ${FILES} -o ${NAME} -g
+		${COMPILER} ${FILES} -o ${NAME} -g -lm
 
 clean:
 		rm -f ${NAME}
