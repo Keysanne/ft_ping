@@ -1,6 +1,4 @@
 #include "ft_ping.h"
-#include <arpa/inet.h>
-
 
 char **update(char **argv, int *argc, bool verbose)
 {
@@ -34,14 +32,18 @@ char **update(char **argv, int *argc, bool verbose)
     return final;
 }
 
-void    create_icmp(struc *global, int seq)
+void    setup_icmp(struc *global)
 {
-    struct icmphdr *icmp = (struct icmphdr *)global->buffer;
-    icmp->type = ICMP_ECHO;
-    icmp->code = 0;
-    icmp->checksum = 0; 
-    icmp->un.echo.id = getpid();
-    icmp->un.echo.sequence = seq;
+    /*-------------------SENDTO-VAR-------------------*/
+    bzero(&global->dst, sizeof(global->dst));
+    global->dst.sin_family = AF_INET;
+    global->dst.sin_addr.s_addr = inet_addr(global->ip);
+    /*-------------------ICMP_PROTOCOL-------------------*/
+    global->icmp = (struct icmphdr *)global->buffer;
+    global->icmp->type = ICMP_ECHO;
+    global->icmp->code = 0;
+    global->icmp->checksum = 0;
+    global->icmp->un.echo.sequence = 0;
 }
 
 void    init_struc(struc *global, char **argv, int argc, bool verbose)
@@ -50,17 +52,9 @@ void    init_struc(struc *global, char **argv, int argc, bool verbose)
     global->arg = update(argv, &argc, verbose);
     global->packet_recv = 0;
     global->packet_send = 0;
-    /*-------------------SENDTO-VAR-------------------*/
-    bzero(&global->dst, sizeof(global->dst));
-    global->dst.sin_family = AF_INET;
-    global->dst.sin_addr.s_addr = inet_addr(*global->arg);
-    global->dst.sin_port = htons(3000);
-    /*-------------------ICMP_PROTOCOL-------------------*/
-    global->icmp = (struct icmphdr *)global->buffer;
-    global->icmp->type = ICMP_ECHO;
-    global->icmp->code = 0;
-    global->icmp->checksum = 0;
-    global->icmp->un.echo.sequence = htons(1);
+    global->time_min = 2147483648;
+    global->time_max = 0;
+    global->time = NULL;
     /*-------------------SET-UP-RAW-SOCKET-------------------*/
     global->sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (global->sockfd == -1)
@@ -80,6 +74,7 @@ void free_arg(struc *global, int error)
 {
     for(int i = 0; global->arg[i]; i++)
         free(global->arg[i]);
+    free(global->ip);
     free(global->arg);
     close(global->sockfd);
     exit(error);

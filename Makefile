@@ -1,9 +1,10 @@
 NAME= ft_ping
 COMPILER= gcc 
-FILES=	main.c \
-		utils.c \
+FILES=	main.c  \
+		utils.c  \
 		options.c \
-		check_ip.c
+		check_ip.c \
+		time.c
 
 all: ${NAME}
 

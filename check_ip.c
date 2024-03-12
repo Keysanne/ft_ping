@@ -1,17 +1,18 @@
 #include "ft_ping.h"
 
-void    is_an_ip(struc *global, char **ip)
+void    is_an_ip(struc *global, char *ip)
 {
     struct sockaddr_in sa;
 
-    if (inet_pton(AF_INET, *ip, &(sa.sin_addr)) == 1)
+	global->ip = strdup(ip);
+    if (inet_pton(AF_INET, global->ip, &(sa.sin_addr)) == 1)
         return;
     else
     {
-        if (strncmp(*ip, "0x", 2) == 0)
-            sprintf(*ip, "%ld", hxtoi(*ip));
-        *ip = hostname_to_ip(*ip);
-        if (inet_pton(AF_INET, *ip, &(sa.sin_addr)) == 1)
+        if (strncmp(global->ip, "0x", 2) == 0)
+            sprintf(global->ip, "%ld", hxtoi(global->ip));
+        global->ip = hostname_to_ip(global->ip);
+        if (inet_pton(AF_INET, global->ip, &(sa.sin_addr)) == 1)
             return;
         printf("./ft_ping: Unknown host\n");
         free_arg(global, 1);
