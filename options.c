@@ -14,7 +14,7 @@ void    help_option(void)
 void    verbose_option(struc global, char *arg)
 {
     if (global.verbose == true)
-        printf("PING %s (%s): 56 data bytes, id %x = %d\n", arg, global.ip, global.id, global.id);
+        printf("PING %s (%s): %lu data bytes, id %x = %d\n", arg, global.ip, sizeof(global.buffer),global.id, global.id);
     else
-        printf("PING %s (%s): 56 data bytes\n", arg, global.ip);
+        printf("PING %s (%s): %lu data bytes\n", arg, global.ip, sizeof(global.buffer));
 }

@@ -1,5 +1,6 @@
 NAME= ft_ping
 COMPILER= gcc 
+OBJS=	${FILES:.c=.o}
 FILES=	main.c  \
 		utils.c  \
 		options.c \
@@ -8,10 +9,16 @@ FILES=	main.c  \
 
 all: ${NAME}
 
-${NAME}:
-		${COMPILER} ${FILES} -o ${NAME} -g -lm
+${NAME}: ${OBJS}
+		${COMPILER} ${OBJS} -o ${NAME} -g -lm
+
+${OBJS}: ${FILES}
+		${COMPILER} -c ${FILES} -g -lm
 
 clean:
+		rm -f ${OBJS}
+
+fclean: clean
 		rm -f ${NAME}
 
-re: clean all
+re: fclean all

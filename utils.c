@@ -1,32 +1,25 @@
 #include "ft_ping.h"
 
-char **update(char **argv, int *argc, bool verbose)
+int malloc_size(char **argv)
+{
+    int x = 0;
+    for(int y = 1; argv[y]; y++)
+        if(argv[y][0] != '-')
+            x++;
+    return x;
+}
+
+char **update(char **argv)
 {
     int j = 0;
-    char **final = malloc(((*argc) + 1 - (int)verbose) * sizeof(char*));
+    char **final = malloc((malloc_size(argv) + 2) * sizeof(char*));
     
-    (*argc)--;
-    for(int i = 1; argv[i];i++)
+    for(int i = 1; argv[i]; i++)
     {
-        if (strncmp(argv[i], "-") == 0)
-        {
-            (*argc)--;
+        if (strncmp(argv[i], "-", 1) == 0)
             continue;
-        }
         else
-        {
-            if(argv[i][0] == '-')
-            {
-                final[j] = 0;
-                printf("./ft_ping invalid option - '%s'\nTry './ft_ping -?' for more informations.\n", &argv[i][1]);
-                for (int x = 0; final[x]; x++)
-                    free(final[x]);
-                free(final);
-                exit(1);
-            }
-            else
-                final[j++] = strdup(argv[i]);
-        }
+            final[j++] = strdup(argv[i]);
     }
     final[j] = 0;
     return final;
@@ -46,11 +39,11 @@ void    setup_icmp(struc *global)
     global->icmp->un.echo.sequence = 0;
 }
 
-void    init_struc(struc *global, char **argv, int argc, bool verbose)
+void    init_struc(struc *global, char **argv)
 {
     /*-------------------VAR-------------------*/
     global->id = getpid();
-    global->arg = update(argv, &argc, verbose);
+    global->arg = update(argv);
     global->packet_recv = 0;
     global->packet_send = 0;
     global->time_min = 2147483648;
@@ -60,18 +53,34 @@ void    init_struc(struc *global, char **argv, int argc, bool verbose)
     /*-------------------SET-UP-RAW-SOCKET-------------------*/
     global->sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (global->sockfd == -1)
-        perror("Error creating socket");
+        perror("socket");
     return;
 }
 
-bool find_option(char **argv, char opt)
+void find_option(struc *global, char **argv)
 {
-    for(int i = 0; argv[i];i++)
+    char    options[] = "v?";
+    for(int i = 1; argv[i]; i++)
+    {
         if (argv[i][0] == '-')
-            for(int j = 0;argv[i][j]; j++)
-                if(argv[i][j] == opt)
-                    return true;
-    return false;
+        {
+            for(int x = 1; argv[i][x]; x++)
+            {
+                if(find(options, argv[i][x]) == -1)
+                {
+                    if(printf("./ft_ping invalid option - '%c'\nTry './ft_ping -?' for more informations.\n", argv[i][x])) //change msg
+                        exit(1);
+                }
+                else 
+                {   
+                    if (argv[i][x] == 'v')
+                        global->verbose = true;
+                    if (argv[i][x] == '?')
+                        global->help = true;
+                }
+            }
+        }
+    }
 }
 
 void free_arg(struc *global, int error)
