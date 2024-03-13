@@ -11,19 +11,10 @@ void    help_option(void)
     exit(0);
 }
 
-void    verbose_option(struc global)
+void    verbose_option(struc global, char *arg)
 {
     if (global.verbose == true)
-        printf("PING %s (%s): 56 data bytes, id %d = %d\n", *global.arg, global.ip, 10, 10); // CHANGE THE TWO 10
+        printf("PING %s (%s): 56 data bytes, id %x = %d\n", arg, global.ip, global.id, global.id);
     else
-        printf("PING %s (%s): 56 data bytes\n", *global.arg, global.ip);
+        printf("PING %s (%s): 56 data bytes\n", arg, global.ip);
 }
-
- // -v option 
-    // int x = 7;
-    // int *y = &x;
-    // char *test;
-    // sprintf(test, "%p", y);
-    // test[6] = 0;
-    // printf("%s\n", &test[2]);
-    // get an hexa that is id and convert it to decimal to be prototype as hexa = deci

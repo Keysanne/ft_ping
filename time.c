@@ -5,7 +5,7 @@ float   moy(float *tab)
     float   final = 0;
     int     x;
 
-    for(x; tab[x] != -1; x++)
+    for(x = 0; tab[x] != -1; x++)
         final += tab[x];
     final /= x;
     return final;
@@ -25,7 +25,7 @@ float   deviation(float *tab)
 float*  add_time(float *tab, float time)
 {
     float*  new_tab;
-    if(tab == NULL)
+    if(tab[0] == -1)
     {
         new_tab = malloc(2 * sizeof(float));
         new_tab[0] = time;
@@ -40,8 +40,8 @@ float*  add_time(float *tab, float time)
             new_tab[x] = tab[x];
         new_tab[x++] = time;
         new_tab[x] = -1;
-        free(tab);
     }
+    free(tab);
     return new_tab;
 }
 

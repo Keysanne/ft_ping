@@ -8,7 +8,7 @@ char **update(char **argv, int *argc, bool verbose)
     (*argc)--;
     for(int i = 1; argv[i];i++)
     {
-        if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "-?") == 0)
+        if (strncmp(argv[i], "-") == 0)
         {
             (*argc)--;
             continue;
@@ -49,12 +49,14 @@ void    setup_icmp(struc *global)
 void    init_struc(struc *global, char **argv, int argc, bool verbose)
 {
     /*-------------------VAR-------------------*/
+    global->id = getpid();
     global->arg = update(argv, &argc, verbose);
     global->packet_recv = 0;
     global->packet_send = 0;
     global->time_min = 2147483648;
     global->time_max = 0;
-    global->time = NULL;
+    global->time = malloc(sizeof(float));
+    global->time[0] = -1;
     /*-------------------SET-UP-RAW-SOCKET-------------------*/
     global->sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (global->sockfd == -1)
@@ -62,11 +64,13 @@ void    init_struc(struc *global, char **argv, int argc, bool verbose)
     return;
 }
 
-bool find_option(char **argv, char *opt)
+bool find_option(char **argv, char opt)
 {
     for(int i = 0; argv[i];i++)
-        if (strcmp(argv[i], opt) == 0)
-            return true;
+        if (argv[i][0] == '-')
+            for(int j = 0;argv[i][j]; j++)
+                if(argv[i][j] == opt)
+                    return true;
     return false;
 }
 
@@ -74,6 +78,7 @@ void free_arg(struc *global, int error)
 {
     for(int i = 0; global->arg[i]; i++)
         free(global->arg[i]);
+    free(global->time);
     free(global->ip);
     free(global->arg);
     close(global->sockfd);

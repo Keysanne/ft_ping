@@ -19,8 +19,9 @@
 
 typedef struct  t_struc
 {
-    char                **arg;
+    int                 id;
     char                *ip;
+    char                **arg;
     int                 sockfd;
     bool                verbose;
     float               time_min;
@@ -36,7 +37,7 @@ typedef struct  t_struc
 
 void    help_option(void);
 void    setup_icmp(struc *global);
-void    verbose_option(struc global);
+void    verbose_option(struc global, char *arg);
 void    is_an_ip(struc *global, char *ip);
 void    free_arg(struc *global, int error);
 void    create_icmp(struc *global, int seq);
@@ -45,7 +46,7 @@ void    init_struc(struc *global, char **argv, int argc, bool verbose);
 
 char**  update(char **argv, int *argc, bool verbose);
 
-bool    find_option(char **argv, char *opt);
+bool    find_option(char **argv, char opt);
 
 char*   hostname_to_ip(char * hostname);
 
