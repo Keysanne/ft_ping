@@ -20,15 +20,18 @@
 typedef struct  t_struc
 {
     int                 id;
-    char                *ip;
     bool                help;
-    float               *time;
-    char                **arg;
-    int                 sockfd;
     bool                verbose;
+    int                 sockfd;
+
+    char                *ip;
+    char                **arg;
+    
+    float               *time;
     float               time_min;
     float               time_max;
-    char                buffer[56];
+    
+    char                buffer[64];
     int                 packet_send;
     int                 packet_recv;
     struct icmphdr      *icmp;
@@ -41,14 +44,14 @@ void    setup_icmp(struc *global);
 void    find_option(struc *global, char **argv);
 void    is_an_ip(struc *global, char *ip);
 void    free_arg(struc *global, int error);
-void    create_icmp(struc *global, int seq);
 void    manage_time(struc *global, float time);
 void    verbose_option(struc global, char *arg);
-void    init_struc(struc *global, char **argv);
+void    init_struc(struc *global, char **argv, int argc);
 
+int     malloc_size(char **argv);
 int     find(char* str, char find);
 
-char**  update(char **argv);
+char**  update(int argc, char **argv);
 
 char*   hostname_to_ip(char * hostname);
 

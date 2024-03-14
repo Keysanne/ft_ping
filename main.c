@@ -27,17 +27,24 @@ void    loop(struc *global)
 {
     int     x;
     clock_t start = clock();
-    setup_icmp(global);
 
-
+    bzero(&global->dst, sizeof(global->dst));
+    global->dst.sin_family = AF_INET;
+    global->dst.sin_addr.s_addr = inet_addr(global->ip);
+    
     if((x = sendto(global->sockfd, global->buffer, sizeof(global->buffer), 0, (struct sockaddr*)&global->dst, sizeof(global->dst))) <= 0)
     {
         perror("sendto");
         free_arg(global, 1);
     }
     (global->packet_send)++;
-    socklen_t     addrlen = sizeof(global->dst);
-    if ((x = recvfrom(global->sockfd, global->buffer, sizeof(global->buffer), 0, (struct sockaddr*)&global->dst, &addrlen)) <= 0)
+
+    bzero(&global->from, sizeof(global->from));
+    global->from.sin_family = AF_INET;
+    global->from.sin_addr.s_addr = inet_addr("0.0.0.0");
+
+    socklen_t     fromlen = sizeof(global->from);
+    if ((x = recvfrom(global->sockfd, global->buffer, sizeof(global->buffer), 0, (struct sockaddr*)&global->from, &fromlen)) <= 0)
     {
         perror("recvfrom");
         free_arg(global, 1);
@@ -63,7 +70,7 @@ int main(int argc, char **argv)
     find_option(&global, argv);
     if (global.help == true)
         help_option();
-    init_struc(&global, argv);
+    init_struc(&global, argv, argc);
     signal(SIGINT, &endProg);
     is_an_ip(&global, *global.arg);
     verbose_option(global, *global.arg);
