@@ -5,7 +5,8 @@ FILES=	main.c  \
 		utils.c  \
 		options.c \
 		check_ip.c \
-		time.c
+		time.c		\
+		packet.c
 
 all: ${NAME}
 

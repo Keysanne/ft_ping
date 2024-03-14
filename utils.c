@@ -29,7 +29,10 @@ void    init_struc(struc *global, char **argv, int argc)
     /*-------------------SET-UP-RAW-SOCKET-------------------*/
     global->sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (global->sockfd == -1)
+    {
         perror("socket");
+        free_arg(global, 1);
+    }
     return;
 }
 

@@ -14,10 +14,19 @@
 #include <sys/types.h>
 #include <netinet/in.h> 
 #include <sys/socket.h>
-#include <netinet/ip_icmp.h>
 #include <linux/if_packet.h>
 
-typedef struct  t_struc
+struct  icmp
+{
+    uint8_t     type;
+    uint8_t     code;
+    uint16_t    checksum;
+    uint16_t    ident;
+    uint16_t    seq;
+    char        buffer[56];
+};
+
+typedef struct  struc
 {
     int                 id;
     bool                help;
@@ -31,13 +40,12 @@ typedef struct  t_struc
     float               time_min;
     float               time_max;
     
-    char                buffer[64];
     int                 packet_send;
     int                 packet_recv;
-    struct icmphdr      *icmp;
+    struct icmp         icmp;
     struct sockaddr_in  dst;
     struct sockaddr_in  from;
-}       struc;
+}   struc;
 
 void    help_option(void);
 void    setup_icmp(struc *global);
@@ -50,6 +58,8 @@ void    init_struc(struc *global, char **argv, int argc);
 
 int     malloc_size(char **argv);
 int     find(char* str, char find);
+int     send_packet(struc *global);
+int     recv_packet(struc *global);
 
 char**  update(int argc, char **argv);
 

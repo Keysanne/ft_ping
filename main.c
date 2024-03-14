@@ -28,30 +28,10 @@ void    loop(struc *global)
     int     x;
     clock_t start = clock();
 
-    bzero(&global->dst, sizeof(global->dst));
-    global->dst.sin_family = AF_INET;
-    global->dst.sin_addr.s_addr = inet_addr(global->ip);
-    
-    if((x = sendto(global->sockfd, global->buffer, sizeof(global->buffer), 0, (struct sockaddr*)&global->dst, sizeof(global->dst))) <= 0)
-    {
-        perror("sendto");
-        free_arg(global, 1);
-    }
+    x = send_packet(global);
     (global->packet_send)++;
-
-    bzero(&global->from, sizeof(global->from));
-    global->from.sin_family = AF_INET;
-    global->from.sin_addr.s_addr = inet_addr("0.0.0.0");
-
-    socklen_t     fromlen = sizeof(global->from);
-    if ((x = recvfrom(global->sockfd, global->buffer, sizeof(global->buffer), 0, (struct sockaddr*)&global->from, &fromlen)) <= 0)
-    {
-        perror("recvfrom");
-        free_arg(global, 1);
-    }
+    x = recv_packet(global);
     (global->packet_recv)++;
-
-
     clock_t end = clock();
     float time = (end - start);
     time /= 1000;
