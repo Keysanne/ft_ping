@@ -15,16 +15,8 @@
 #include <netinet/in.h> 
 #include <sys/socket.h>
 #include <linux/if_packet.h>
+#include <libnet.h>
 
-struct  icmp
-{
-    uint8_t     type;
-    uint8_t     code;
-    uint16_t    checksum;
-    uint16_t    ident;
-    uint16_t    seq;
-    char        buffer[56];
-};
 
 typedef struct  struc
 {
@@ -42,7 +34,6 @@ typedef struct  struc
     
     int                 packet_send;
     int                 packet_recv;
-    struct icmp         icmp;
     struct sockaddr_in  dst;
     struct sockaddr_in  from;
 }   struc;

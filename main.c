@@ -35,7 +35,7 @@ void    loop(struc *global)
     clock_t end = clock();
     float time = (end - start);
     time /= 1000;
-    printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n", x, global->ip, global->packet_send - 1, x, time);
+    printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n", x, global->ip, global->packet_recv, x, time);
     manage_time(global, time);
     sleep(1);
 }
