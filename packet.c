@@ -44,15 +44,12 @@ int     recv_packet(struc *global)
     char        buffer[64];    
     socklen_t   fromlen = sizeof(global->from);
 
-    bzero(&global->from, sizeof(global->from));
-    global->from.sin_family = AF_INET;
-    global->from.sin_addr.s_addr = inet_addr(global->ip);
-    global->from.sin_port = 0;
     if ((x = recvfrom(global->sockfd, buffer, sizeof(buffer), 0, (struct sockaddr*)&global->from, &fromlen)) <= 0)
     {
         perror("recvfrom");
         free_arg(global, 1);
     }
+    printf("%u\n", global->from.sin_addr.s_addr);
     (global->packet_recv)++;
     return x;
 }
