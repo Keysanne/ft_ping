@@ -6,6 +6,7 @@ void	endProg(int signal)
 {
 	if (signal == SIGINT)
 	{
+        pthread_join(*global.thread, NULL);
         printf("--- %s ping statistics ---\n", *global.arg);
         printf("%d packets transmitted, %d packets received, %.0f%% packet loss\n", global.packet_send, global.packet_recv, (float)abs(global.packet_recv / global.packet_send * 100 - 100));
         if (global.time[0] != -1)
@@ -25,18 +26,10 @@ void	endProg(int signal)
 
 void    loop(struc *global)
 {
-    int     x;
-    clock_t start = clock();
-
-    x = send_packet(global);
-    (global->packet_send)++;
-    x = recv_packet(global);
-    (global->packet_recv)++;
-    clock_t end = clock();
-    float time = (end - start);
-    time /= 1000;
-    printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n", x, global->ip, global->packet_recv, x, time);
-    manage_time(global, time);
+    gettimeofday(&global->start, NULL);
+    send_packet(global);
+    pthread_create(global->thread, NULL, recv_packet, (void *)global);
+    pthread_join(*global->thread, NULL);
     sleep(1);
 }
 
@@ -54,6 +47,7 @@ int main(int argc, char **argv)
     signal(SIGINT, &endProg);
     is_an_ip(&global, *global.arg);
     verbose_option(global, *global.arg);
+    create_packet(&global);
     while(true)
         loop(&global);
     free_arg(&global, 0);

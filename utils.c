@@ -26,11 +26,20 @@ void    init_struc(struc *global, char **argv, int argc)
     global->time_max = 0;
     global->time = malloc(sizeof(float));
     global->time[0] = -1;
+    global->thread = calloc(1, sizeof(pthread_t));
     /*-------------------SET-UP-RAW-SOCKET-------------------*/
     global->sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (global->sockfd == -1)
     {
         perror("socket");
+        free_arg(global, 1);
+    }
+    struct timeval  timeout;
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+    if (setsockopt(global->sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+    {
+        perror("sockopt");
         free_arg(global, 1);
     }
     return;
@@ -43,19 +52,27 @@ void find_option(struc *global, char **argv)
     {
         if (argv[i][0] == '-')
         {
-            for(int x = 1; argv[i][x]; x++)
+            if (argv[i][1] == '\0')
             {
-                if(find(options, argv[i][x]) == -1)
-                {   
-                    printf("./ft_ping invalid option - '%c'\nTry './ft_ping -?' for more informations.\n", argv[i][x]);
-                    exit(1);
-                }
-                else 
-                {   
-                    if (argv[i][x] == 'v')
-                        global->verbose = true;
-                    if (argv[i][x] == '?')
-                        global->help = true;
+                printf("./ft_ping invalid option - '%c'\nTry './ft_ping -?' for more informations.\n", argv[i][1]);
+                exit(1);
+            }
+            else
+            {
+                for(int x = 1; argv[i][x]; x++)
+                {
+                    if(find(options, argv[i][x]) == -1)
+                    {   
+                        printf("./ft_ping invalid option - '%c'\nTry './ft_ping -?' for more informations.\n", argv[i][x]);
+                        exit(1);
+                    }
+                    else 
+                    {   
+                        if (argv[i][x] == 'v')
+                            global->verbose = true;
+                        if (argv[i][x] == '?')
+                            global->help = true;
+                    }
                 }
             }
         }
@@ -69,6 +86,7 @@ void free_arg(struc *global, int error)
     free(global->time);
     free(global->ip);
     free(global->arg);
+    free(global->thread);
     close(global->sockfd);
     exit(error);
 }
