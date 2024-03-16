@@ -14,9 +14,7 @@
 #include <sys/types.h>
 #include <netinet/in.h> 
 #include <sys/socket.h>
-#include <linux/if_packet.h>
-#include <libnet.h>
-
+#include <ip_icmp.h>
 
 typedef struct  struc
 {
@@ -27,6 +25,7 @@ typedef struct  struc
 
     char                *ip;
     char                **arg;
+    char                packet[64];
     
     float               *time;
     float               time_min;
@@ -35,7 +34,6 @@ typedef struct  struc
     int                 packet_send;
     int                 packet_recv;
     struct sockaddr_in  dst;
-    struct sockaddr_in  from;
 }   struc;
 
 void    help_option(void);

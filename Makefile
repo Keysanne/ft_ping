@@ -11,10 +11,10 @@ FILES=	main.c  \
 all: ${NAME}
 
 ${NAME}: ${OBJS}
-		${COMPILER} ${OBJS} -o ${NAME} -g -lm -lnet
+		${COMPILER} ${OBJS} -o ${NAME} -g -lm
 
 ${OBJS}: ${FILES}
-		${COMPILER} -c ${FILES} -g -lm -lnet
+		${COMPILER} -c ${FILES} -g -lm
 
 clean:
 		rm -f ${OBJS}
