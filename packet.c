@@ -1,5 +1,20 @@
 #include "ft_ping.h"
 
+uint16_t checksum(unsigned char* buffer, int bytes)
+{
+	uint16_t	*buff;
+	uint32_t	sum;
+
+	buff = (uint16_t *)buffer;
+	for (sum = 0; bytes > 1; bytes -= 2)
+		sum += *buff++;
+	if (bytes == 1)
+		sum += *(uint8_t*)buff;
+	sum = (sum >> 16) + (sum & 0xFFFF);
+	sum += (sum >> 16);
+	return (~sum);
+}
+
 int    send_packet(struc *global)
 {
     int         x;
