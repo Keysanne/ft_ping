@@ -8,7 +8,8 @@ void	endProg(int signal)
 	{
         pthread_join(*global.thread, NULL);
         printf("--- %s ping statistics ---\n", *global.arg);
-        printf("%d packets transmitted, %d packets received, %.0f%% packet loss\n", global.packet_send, global.packet_recv, (float)abs(global.packet_recv / global.packet_send * 100 - 100));
+        printf("%d packets transmitted, %d packets received", global.packet_send, global.packet_recv);
+        printf(", %d%% packet loss\n", pourcent(global.packet_recv, global.packet_send));
         if (global.time[0] != -1)
             printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n", global.time_min, moy(global.time), global.time_max, deviation(global.time));
         for(int i = 1; global.arg[i]; i++)

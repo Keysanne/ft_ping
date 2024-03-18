@@ -90,3 +90,12 @@ void free_arg(struc *global, int error)
     close(global->sockfd);
     exit(error);
 }
+
+int   pourcent(float rec, float snd)
+{
+    float   mtp = 0;
+
+    mtp = 100 / snd;
+    int final = rec * mtp;
+    return abs(final - 100);
+}

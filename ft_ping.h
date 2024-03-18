@@ -50,6 +50,7 @@ void    verbose_option(struc global, char *arg);
 void    create_packet(struc *global);
 void    init_struc(struc *global, char **argv, int argc);
 
+int   pourcent(float rec, float snd);
 int     malloc_size(char **argv);
 int     find(char* str, char find);
 int     send_packet(struc *global);
