@@ -57,7 +57,7 @@ void     *recv_packet(void *data)
             gettimeofday(&end, NULL);
             double time = (end.tv_sec - global->start.tv_sec) * 1000.0; 
             time += (end.tv_usec - global->start.tv_usec) / 1000.0;
-            printf("%ld bytes from %s: icmp_seq=%d ttl=%ld time=%.3f ms\n", sizeof(buffer), global->ip, global->packet_send - 1, sizeof(buffer), time);
+            printf("%ld bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n", sizeof(buffer), global->ip, global->packet_send - 1, TTL, time);
             manage_time(global, time);
             (global->packet_recv)++;
             return NULL;

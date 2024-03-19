@@ -44,7 +44,13 @@ void    init_struc(struc *global, char **argv, int argc)
     timeout.tv_usec = 0;
     if (setsockopt(global->sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
     {
-        perror("sockopt");
+        perror("sockopt recv timeout");
+        free_arg(global, 1);
+    }
+    int x = TTL;
+    if (setsockopt(global->sockfd, IPPROTO_IP, IP_TTL, &x, sizeof(TTL)) < 0)
+    {
+        perror("sockopt ttl");
         free_arg(global, 1);
     }
     return;

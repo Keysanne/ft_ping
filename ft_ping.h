@@ -11,11 +11,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <arpa/inet.h>
-#include <sys/types.h>
-#include <netinet/in.h> 
 #include <sys/socket.h>
 #include <netinet/ip_icmp.h>
 #include <pthread.h>
+
+#define TTL 64
 
 typedef struct  struc
 {
