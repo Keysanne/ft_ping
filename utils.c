@@ -20,6 +20,11 @@ void    init_struc(struc *global, char **argv, int argc)
     /*-------------------VAR-------------------*/
     global->id = getpid();
     global->arg = update(argc, argv);
+    if (*global->arg == NULL)
+    {
+        printf("./ft_ping: missing host operand\nTry './ft_ping -?' for more information.\n");
+        free_arg(global, 2);
+    }
     global->packet_recv = 0;
     global->packet_send = 0;
     global->time_min = 2147483648;
